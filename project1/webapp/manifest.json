@@ -1,0 +1,122 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "fioriagency.project1",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.16.5",
+            "toolsId": "fc3014f1-06ce-4b6b-9eab-b076910cb64e"
+        },
+        "dataSources": {
+            "ZBTP_SRV_KIETPA7_AGENCY_UI_VAN": {
+                "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZBTP_SRV_KIETPA7_AGENCY_UI_VAN',Version='0001')/$value/",
+                "type": "ODataAnnotation",
+                "settings": {
+                    "localUri": "localService/mainService/ZBTP_SRV_KIETPA7_AGENCY_UI_VAN.xml"
+                }
+            },
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "ZBTP_SRV_KIETPA7_AGENCY_UI_VAN"
+                    ],
+                    "localUri": "localService/mainService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.130.7",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "fioriagency.project1.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "transition": "slide",
+                "type": "View",
+                "viewType": "XML",
+                "path": "fioriagency.project1.view",
+                "async": true,
+                "viewPath": "fioriagency.project1.view"
+            },
+            "routes": [
+                {
+                    "name": "RouteAGENCY",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetAGENCY"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetAGENCY": {
+                    "id": "AGENCY",
+                    "name": "AGENCY"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "fioriagency.project1.view.App",
+            "type": "XML",
+            "id": "App"
+        }
+    }
+}
