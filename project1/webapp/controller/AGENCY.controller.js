@@ -8,8 +8,7 @@ sap.ui.define([
         },
 
         onPress: function() {
-            const c_message = "Hello World!";
-
+            const c_message = "Hello World!";            
             alert(c_message);
         }
     });
