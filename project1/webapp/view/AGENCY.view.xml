@@ -1,7 +1,8 @@
 <mvc:View controllerName="fioriagency.project1.controller.AGENCY"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-        <Button id="button1" text="Hello World" press="onPress"></Button>
+        <Button id="button1" text="Hello World" press="onPress" class="customButtonStyle"></Button>
     </Page>
 </mvc:View>
