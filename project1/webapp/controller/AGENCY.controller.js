@@ -13,7 +13,6 @@ sap.ui.define([
             this.getView().setModel(this._oViewModel, "mainView");
 
             let oDataModel = this.getOwnerComponent().getModel();
-
             oDataModel.read("/YBTP_CR_KIETPA7_AGENCY", {
                 // filters: []
                 success: function (oData) {
@@ -32,11 +31,14 @@ sap.ui.define([
             alert(cMessage);
         },
 
-        onAddAgency: function(oEvent) {
-            MessageBox.success("Button Add Placeholder.");
+        onAddAgency: function (oEvent) {
+            // MessageBox.success("Button Add Placeholder.");
+
+            let oDataModel = this.getOwnerComponent().getModel();
+            let sLine = oDataModel.oData.JSONModel[1];
         },
 
-        onDelAgency: function(oEvent) {
+        onDelAgency: function (oEvent) {
             MessageBox.error("Button Delete Placeholder.");
         }
     });

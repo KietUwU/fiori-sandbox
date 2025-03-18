@@ -5,6 +5,7 @@
     xmlns="sap.ui.table">
     <m:Page id="page" title="{i18n>title}">
     <m:content>
+        <m:Button id="button1" text="Hello World" press="onPress" class="customButtonStyle"></m:Button>
 
         <Table
             id="agencyTable"
