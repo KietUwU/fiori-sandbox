@@ -1,8 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageBox"
-], (Controller, JSONModel, MessageBox) => {
+    "sap/m/MessageBox",
+    "sap/ui/model/odata/v2/ODataModel"
+], (Controller, JSONModel, MessageBox, ODataModel) => {
     "use strict";
 
     return Controller.extend("fioriagency.project1.controller.AGENCY", {
@@ -24,6 +25,7 @@ sap.ui.define([
                     console.log("oError: ", oError);
                 }.bind(this)
             });
+
         },
 
         onPress: function () {
@@ -34,12 +36,68 @@ sap.ui.define([
         onAddAgency: function (oEvent) {
             // MessageBox.success("Button Add Placeholder.");
 
-            let oDataModel = this.getOwnerComponent().getModel();
-            let sLine = oDataModel.oData.JSONModel[1];
+            /* let oDataModel = new ODataModel({
+                serviceUrl: "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI"
+            }); */
+
+            /* let oObject = {
+                AGENCYID: "2",
+                NAME: "Agency 2"
+            };
+
+            oDataModel.create("/ZBTP_SRV_KIETPA7_AGENCY_UI", oObject, {
+                success: function (oResult) {
+                    console.log("oResult: ", oResult);
+                    // oDataModel.refresh(true)
+                    this._readData(oDataModel);
+                }.bind(this),
+                error: function (oError) {
+                    console.log("oError: ", oError);
+                }
+            }); */
+
+            let aModelData = this._oViewModel.getData();
+
+            console.log("aModelData: ", aModelData);
+            aModelData.data.push({});
+            this._oViewModel.setProperty("/data", aModelData); // Refresh Screen
         },
 
         onDelAgency: function (oEvent) {
-            MessageBox.error("Button Delete Placeholder.");
+            // MessageBox.error("Button Delete Placeholder.");
+
+            let oDataModel = new ODataModel({
+                serviceUrl: "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI"
+            });
+
+            let oTable = this.getView().byId("agencyTable");
+            let aSelectedIndices = oTable.getSelectedIndices();
+
+            aSelectedIndices.forEach(iSelectedItem => {
+                let oContext = oTable.getContextByIndex(iSelectedItem);
+                let oObject = oContext.getObject();
+                let sPath = "/YBTP_CR_KIETPA7_AGENCY('" + oObject.AGENCYID + "')";
+
+                console.log("sPath: ", sPath);
+
+                oDataModel.remove(sPath, {
+                    success: function (oResult) {
+                        console.log("oResult: ", oResult);
+
+                        MessageBox.success("{i18n>delSuccess}");
+                        oDataModel.refresh(true)
+                        this._readData(oDataModel);
+                    }.bind(this),
+                    error: function(oError) {
+                        console.log("oError: ", oError);
+                        MessageBox.error("{i18n>delFailure}");
+                    }.bind(this)
+                });
+            });
+        },
+
+        onSubmitAgency: function(oEvent) {
+            MessageBox.error("Submit Delete Placeholder.");
         }
     });
 });
