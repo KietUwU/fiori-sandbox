@@ -31,6 +31,11 @@
 
                     <m:ToolbarSeparator id="_IDGenToolbarSeparator"/>
 
+					<m:Button id="_IDGenButton2"
+                        type="Emphasized"
+                        text="{i18n>submitButton}"
+                        press=".onSubmitAgency"/>
+
                     <m:ToolbarSeparator id="_IDGenToolbarSeparator2" />
 
                     <m:Label id="_IDGenLabel2" text="{i18n>editButton}" />
@@ -54,7 +59,10 @@
 				<Column id="_IDGenColumn1" width="11rem">
 					<m:Label id="_IDGenLabel1" text="Agency Name" />
 					<template>
-                        <m:Text id="_IDGenText1" text="{mainView>NAME}" wrapping="false" />
+						<m:HBox>
+							<m:Input value="{mainView>NAME}" visible="false"></m:Input>
+                        	<m:Text id="_IDGenText1" text="{mainView>NAME}" wrapping="false" visible="true" />
+						</m:HBox>
 					</template>
 				</Column>
 
