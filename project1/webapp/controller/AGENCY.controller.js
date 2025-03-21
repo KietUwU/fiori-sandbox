@@ -62,7 +62,7 @@ sap.ui.define([
             let aModelData = this._oViewModel.getData();
 
             console.log("aModelData: ", aModelData);
-            aModelData.data.push({});
+            aModelData.data.push({"zmstatus": "New"});
 
             this._oViewModel.setProperty("/data", aModelData.data); // Refresh Screen
 
@@ -83,6 +83,16 @@ sap.ui.define([
             aSelectedIndices.forEach(iSelectedItem => {
                 let oContext = oTable.getContextByIndex(iSelectedItem);
                 let oObject = oContext.getObject();
+                switch (oObject.zmstatus) {
+                    case "New":
+                        
+                        break;
+                
+                    default:
+
+                        break;
+                }
+
                 let sPath = "/YBTP_CR_KIETPA7_AGENCY('" + oObject.AGENCYID + "')";
 
                 console.log("sPath: ", sPath);
@@ -136,13 +146,18 @@ sap.ui.define([
 
         onChange: function (oEvent) {
             // MessageBox.information("You edited the data.");
-            let oDataModel = new ODataModel({
+            /* let oDataModel = new ODataModel({
                 serviceUrl: "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI"
             });
 
             let oTable = this.getView().byId("agencyTable");
             let aSelectedIndices = oTable.getSelectedIndices();
+ */
+            const sNewValue = oEvent.mParameters.newValue;
 
+            if (sNewValue === "3nd Street") {
+                MessageBox.error("Invalid Data");
+            };
 
         }
 
