@@ -2,11 +2,14 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/ui/model/odata/v2/ODataModel"
-], (Controller, JSONModel, MessageBox, ODataModel) => {
+    "sap/ui/model/odata/v2/ODataModel",
+    "../model/formatter"
+], (Controller, JSONModel, MessageBox, ODataModel, formatter) => {
     "use strict";
 
     return Controller.extend("fioriagency.project1.controller.AGENCY", {
+        formatter: formatter,
+
         onInit() {
             this._oViewModel = new JSONModel({
                 data: []
@@ -60,7 +63,11 @@ sap.ui.define([
 
             console.log("aModelData: ", aModelData);
             aModelData.data.push({});
-            this._oViewModel.setProperty("/data", aModelData); // Refresh Screen
+
+            this._oViewModel.setProperty("/data", aModelData.data); // Refresh Screen
+
+            let sJsonString = this._oViewModel.getJSON();
+            console.log("sJsonString: ", sJsonString);
         },
 
         onDelAgency: function (oEvent) {
@@ -80,7 +87,7 @@ sap.ui.define([
 
                 console.log("sPath: ", sPath);
 
-                oDataModel.remove(sPath, {
+                /* oDataModel.remove(sPath, {
                     success: function (oResult) {
                         console.log("oResult: ", oResult);
 
@@ -88,16 +95,56 @@ sap.ui.define([
                         oDataModel.refresh(true)
                         this._readData(oDataModel);
                     }.bind(this),
-                    error: function(oError) {
+                    error: function (oError) {
                         console.log("oError: ", oError);
                         MessageBox.error("{i18n>delFailure}");
                     }.bind(this)
-                });
+                }); */
             });
         },
 
-        onSubmitAgency: function(oEvent) {
-            MessageBox.error("Submit Delete Placeholder.");
+        onSubmitAgency: function (oEvent) {
+            let oAnswer = sap.m.MessageBox.confirm("Would you like to submit?", {
+                title: "Confirm",
+                onClose: null,
+                styleClass: "",
+                actions: [
+                    sap.m.MessageBox.Action.OK,
+                    sap.m.MessageBox.Action.CANCEL
+                ],
+                emphasizedAction: sap.m.MessageBox.Action.OK,
+                initialFocus: null,
+                textDirection: sap.ui.core.TextDirection.Inherit,
+                dependentOn: null
+            });
+
+            console.log("oAnswer: ", oAnswer);
+        },
+
+        onToggleEdit: function (oEvent) {
+            // MessageBox.success("Edit Toggle.");
+
+            let oNameInput = this.byId("nameInput");
+
+            if (oEvent.getSource().getState() === true) {
+                MessageBox.information("Edit Enabled.");
+            } else {
+                MessageBox.information("Edit Disabled.");
+            };
+
+        },
+
+        onChange: function (oEvent) {
+            // MessageBox.information("You edited the data.");
+            let oDataModel = new ODataModel({
+                serviceUrl: "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI"
+            });
+
+            let oTable = this.getView().byId("agencyTable");
+            let aSelectedIndices = oTable.getSelectedIndices();
+
+
         }
+
     });
 });

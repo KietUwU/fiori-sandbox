@@ -5,7 +5,7 @@
     xmlns="sap.ui.table">
     <m:Page id="page" title="{i18n>title}">
     <m:content>
-        <m:Button id="button1" text="Hello World" press="onPress" class="customButtonStyle"></m:Button>
+        <!-- <m:Button id="button1" text="Hello World" press="onPress" class="customButtonStyle"></m:Button> -->
 
         <Table
             id="agencyTable"
@@ -39,7 +39,7 @@
                     <m:ToolbarSeparator id="_IDGenToolbarSeparator2" />
 
                     <m:Label id="_IDGenLabel2" text="{i18n>editButton}" />
-                    <m:Switch id="_IDGenSwitch" state="false">
+                    <m:Switch id="_IDGenSwitch" state="false" change="onToggleEdit">
                         <m:layoutData>
                             <m:FlexItemData id="_IDGenFlexItemData" growFactor="1" />
                         </m:layoutData>
@@ -49,55 +49,83 @@
 			</extension>
             
 			<columns>
+				<Column width="5rem" hAlign="Center">
+					<core:Icon src="sap-icon://edit" />
+					<template>
+						<m:ObjectStatus class="sapUiTinyMarginBegin" 
+							text=""
+							icon="{
+								path: 'mainView>zmstatus',
+								formatter: '.formatter.statusIcon'
+							}"
+						/>
+					</template>
+				</Column>
+
 				<Column id="_IDGenColumn" width="11rem">
 					<m:Label id="_IDGenLabel" text="Agency ID" />
 					<template>
 						<m:Text id="_IDGenText" text="{mainView>AGENCYID}" wrapping="false" />
 					</template>
 				</Column>
-                
+
 				<Column id="_IDGenColumn1" width="11rem">
 					<m:Label id="_IDGenLabel1" text="Agency Name" />
 					<template>
-						<m:HBox>
-							<m:Input value="{mainView>NAME}" visible="false"></m:Input>
-                        	<m:Text id="_IDGenText1" text="{mainView>NAME}" wrapping="false" visible="true" />
+						<m:HBox id="_IDGenHBox">
+							<m:Input id="nameInput" value="{mainView>NAME}" visible="true" change="onChange" ></m:Input>
+                        	<m:Text id="nameText" text="{mainView>NAME}" wrapping="false" visible="false" />
 						</m:HBox>
 					</template>
 				</Column>
 
-                <Column width="11rem">
-					<m:Label text="Street" />
+                <Column id="_IDGenColumn3" width="11rem">
+					<m:Label id="_IDGenLabel3" text="Street" />
 					<template>
-                        <m:Text text="{mainView>STREET}" wrapping="false" />
+						<m:HBox> 
+							<m:Input id="streetInput" value="{mainView>STREET}" visible="true" change="onChange"></m:Input>
+                        	<m:Text id="_IDGenText2" text="{mainView>STREET}" wrapping="false" visible="false" />
+						</m:HBox>
 					</template>
 				</Column>
 
-                <Column width="11rem">
-					<m:Label text="Postal Code" />
+                <Column id="_IDGenColumn4" width="11rem">
+					<m:Label id="_IDGenLabel4" text="Postal Code" />
 					<template>
-                        <m:Text text="{mainView>POSTALCODE}" wrapping="false" />
+						<m:HBox> 
+							<m:Input id="postCdInput" value="{mainView>POSTALCODE}" visible="true" change="onChange"></m:Input>
+                        	<m:Text id="_IDGenText3" text="{mainView>POSTALCODE}" wrapping="false" visible="false" />
+						</m:HBox>
 					</template>
 				</Column>
 
-                <Column width="11rem">
-					<m:Label text="City" />
+                <Column id="_IDGenColumn5" width="11rem">
+					<m:Label id="_IDGenLabel5" text="City" />
 					<template>
-                        <m:Text text="{mainView>CITY}" wrapping="false" />
+						<m:HBox> 
+							<m:Input id="cityInput" value="{mainView>CITY}" visible="true" change="onChange"></m:Input>
+							<m:Text id="_IDGenText4" text="{mainView>CITY}" wrapping="false" visible="false" />
+						</m:HBox>
 					</template>
 				</Column>
                 
-                <Column width="11rem">
-					<m:Label text="Country" />
+                <Column id="_IDGenColumn6" width="11rem">
+					<m:Label id="_IDGenLabel6" text="Country" />
 					<template>
-                        <m:Text text="{mainView>COUNTRYCODE}" wrapping="false" />
+						<m:HBox> 
+							<m:Input id="cntryInput" value="{mainView>COUNTRYCODE}" visible="true" change="onChange"></m:Input>
+							<m:Text id="_IDGenText5" text="{mainView>COUNTRYCODE}" wrapping="false" visible="false" />
+						</m:HBox>
 					</template>
 				</Column>
 
-                <Column width="11rem">
-					<m:Label text="Phone Number" />
+                <Column id="_IDGenColumn7" width="11rem">
+					<m:Label id="_IDGenLabel7" text="Phone Number" />
 					<template>
-                        <m:Text text="{mainView>PHONENUMBER}" wrapping="false" />
+						<m:HBox> 
+							<m:Input id="phoneInput" value="{mainView>PHONENUMBER}" visible="true" change="onChange"></m:Input>
+							<m:Text id="_IDGenText6" text="{mainView>PHONENUMBER}" wrapping="false" visible="false" />
+						</m:HBox>
 					</template>
 				</Column>
 			</columns>
