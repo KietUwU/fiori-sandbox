@@ -66,8 +66,8 @@ sap.ui.define([
 
             this._oViewModel.setProperty("/data", aModelData.data); // Refresh Screen
 
-            let sJsonString = this._oViewModel.getJSON();
-            console.log("sJsonString: ", sJsonString);
+            /* let sJsonString = this._oViewModel.getJSON();
+            console.log("sJsonString: ", sJsonString); */
         },
 
         onDelAgency: function (oEvent) {
@@ -154,6 +154,9 @@ sap.ui.define([
             let aSelectedIndices = oTable.getSelectedIndices();
  */
             const sNewValue = oEvent.mParameters.newValue;
+
+            const oRow = oEvent.getSource().getParent();//Get Row
+            const oTable = oRow.getParent();// Get Table
 
             if (sNewValue === "3nd Street") {
                 MessageBox.error("Invalid Data");
