@@ -10,30 +10,34 @@
         <Table
             id="agencyTable"
 			rows="{mainView>/data}"
-			selectionMode="MultiToggle"
+			selectionMode="{= ${mainView>/bEdit} === true ? 'MultiToggle' : 'None' }"
 			paste="onPaste"
+			rowSelectionChange="onRowSelectionChange"
 			ariaLabelledBy="title">
 
 			<extension>
 				<m:OverflowToolbar id="_IDGenOverflowToolbar" style="Clear">
-					<m:Title id="title" text="{i18n>agencyTitle}"/>
+					<m:Title id="title" text="{i18n>agencyTitle} (Total : {mainView>/iTotal})"/>
 
                     <m:ToolbarSpacer id="_IDGenToolbarSpacer1"/>
 
                     <m:Button id="_IDGenButton" 
                         type="Success"
                         text="{i18n>addButton}"
-                        press=".onAddAgency"/>
+						enabled="{= ${mainView>/bEdit} }"
+                        press=".onAddAgency" />
                     <m:Button id="_IDGenButton1" 
                         type="Negative"
                         text="{i18n>delButton}"
-                        press=".onDelAgency"/>
+						enabled="{= ${mainView>/bEdit} &amp;&amp; ${mainView>/bHasSelectedRow} }"
+						press=".onDelAgency" />
 
                     <m:ToolbarSeparator id="_IDGenToolbarSeparator"/>
 
 					<m:Button id="_IDGenButton2"
                         type="Emphasized"
                         text="{i18n>submitButton}"
+						enabled="{= ${mainView>/bEdit} }"
                         press=".onSubmitAgency"/>
 
                     <m:ToolbarSeparator id="_IDGenToolbarSeparator2" />
@@ -49,7 +53,7 @@
 			</extension>
             
 			<columns>
-				<Column width="5rem" hAlign="Center">
+				<Column width="5rem" hAlign="Center" visible="{= ${mainView>/bEdit} }" >
 					<core:Icon src="sap-icon://edit" />
 					<template>
 						<m:ObjectStatus class="sapUiTinyMarginBegin" 
@@ -65,7 +69,10 @@
 				<Column id="_IDGenColumn" width="11rem">
 					<m:Label id="_IDGenLabel" text="Agency ID" />
 					<template>
-						<m:Text id="_IDGenText" text="{mainView>AGENCYID}" wrapping="false" />
+						<m:HBox>
+							<m:Input id="AGENCYID" value="{mainView>AGENCYID}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>zmstatus} === 'New' ? true : false }" ></m:Input>
+							<m:Text id="_IDGenText" text="{mainView>AGENCYID}" wrapping="{= ${!mainView>/bEdit} }" visible="{= !${mainView>/bEdit} }" />
+						</m:HBox>
 					</template>
 				</Column>
 
@@ -73,8 +80,8 @@
 					<m:Label id="_IDGenLabel1" text="Agency Name" />
 					<template>
 						<m:HBox id="_IDGenHBox">
-							<m:Input id="nameInput" value="{mainView>NAME}" visible="true" change="onChange" ></m:Input>
-                        	<m:Text id="nameText" text="{mainView>NAME}" wrapping="false" visible="false" />
+							<m:Input id="nameInput" value="{mainView>NAME}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/bEdit} }" ></m:Input>
+                        	<m:Text id="nameText" text="{mainView>NAME}" wrapping="false" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>
 				</Column>
@@ -83,8 +90,8 @@
 					<m:Label id="_IDGenLabel3" text="Street" />
 					<template>
 						<m:HBox> 
-							<m:Input id="streetInput" value="{mainView>STREET}" visible="true" change="onChange"></m:Input>
-                        	<m:Text id="_IDGenText2" text="{mainView>STREET}" wrapping="false" visible="false" />
+							<m:Input id="streetInput" value="{mainView>STREET}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/bEdit} }"></m:Input>
+                        	<m:Text id="_IDGenText2" text="{mainView>STREET}" wrapping="false" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>
 				</Column>
@@ -93,8 +100,8 @@
 					<m:Label id="_IDGenLabel4" text="Postal Code" />
 					<template>
 						<m:HBox> 
-							<m:Input id="postCdInput" value="{mainView>POSTALCODE}" visible="true" change="onChange"></m:Input>
-                        	<m:Text id="_IDGenText3" text="{mainView>POSTALCODE}" wrapping="false" visible="false" />
+							<m:Input id="postCdInput" value="{mainView>POSTALCODE}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/bEdit} }"></m:Input>
+                        	<m:Text id="_IDGenText3" text="{mainView>POSTALCODE}" wrapping="false" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>
 				</Column>
@@ -103,8 +110,8 @@
 					<m:Label id="_IDGenLabel5" text="City" />
 					<template>
 						<m:HBox> 
-							<m:Input id="cityInput" value="{mainView>CITY}" visible="true" change="onChange"></m:Input>
-							<m:Text id="_IDGenText4" text="{mainView>CITY}" wrapping="false" visible="false" />
+							<m:Input id="cityInput" value="{mainView>CITY}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/bEdit} }"></m:Input>
+							<m:Text id="_IDGenText4" text="{mainView>CITY}" wrapping="false" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>
 				</Column>
@@ -113,8 +120,8 @@
 					<m:Label id="_IDGenLabel6" text="Country" />
 					<template>
 						<m:HBox> 
-							<m:Input id="cntryInput" value="{mainView>COUNTRYCODE}" visible="true" change="onChange"></m:Input>
-							<m:Text id="_IDGenText5" text="{mainView>COUNTRYCODE}" wrapping="false" visible="false" />
+							<m:Input id="cntryInput" value="{mainView>COUNTRYCODE}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/bEdit} }"></m:Input>
+							<m:Text id="_IDGenText5" text="{mainView>COUNTRYCODE}" wrapping="false" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>
 				</Column>
@@ -123,8 +130,8 @@
 					<m:Label id="_IDGenLabel7" text="Phone Number" />
 					<template>
 						<m:HBox> 
-							<m:Input id="phoneInput" value="{mainView>PHONENUMBER}" visible="true" change="onChange"></m:Input>
-							<m:Text id="_IDGenText6" text="{mainView>PHONENUMBER}" wrapping="false" visible="false" />
+							<m:Input id="phoneInput" value="{mainView>PHONENUMBER}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/bEdit} }"></m:Input>
+							<m:Text id="_IDGenText6" text="{mainView>PHONENUMBER}" wrapping="false" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>
 				</Column>

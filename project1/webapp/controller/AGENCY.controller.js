@@ -11,24 +11,64 @@ sap.ui.define([
         formatter: formatter,
 
         onInit() {
+            let oDataModel = this.getOwnerComponent().getModel();
+
+            this._oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             this._oViewModel = new JSONModel({
-                data: []
+                data: [],
+                iTotal: 0,
+                bEdit: false,
+                bHasSelectedRow: false,
+                bHasPendingChange: false
             });
+            this._aOriginalData = [];
+            this._oAgencyTable = this.getView().byId("agencyTable");
             this.getView().setModel(this._oViewModel, "mainView");
 
-            let oDataModel = this.getOwnerComponent().getModel();
+            this._readData(oDataModel);
+
+            /* oDataModel.read("/YBTP_CR_KIETPA7_AGENCY", {
+                // filters: []
+                success: function (oData) {
+                    if (oData.results.length > 0) {
+                        this._aOriginalData = oData.results;
+                        // Set Data
+                        this.getView().getModel("mainView").setProperty("/data", oData.results);
+                        // Set Total
+                        this._oViewModel.setProperty("/iTotal", oData.results.length);
+                    };
+                }.bind(this),
+                error: function (oError) {
+                    console.log("oError: ", oError);
+                }.bind(this)
+            }); */
+
+        },
+
+        _readData: function (oDataModel) {
             oDataModel.read("/YBTP_CR_KIETPA7_AGENCY", {
                 // filters: []
                 success: function (oData) {
                     if (oData.results.length > 0) {
+                        this._aOriginalData = oData.results;
+
                         this.getView().getModel("mainView").setProperty("/data", oData.results);
+                        this._oViewModel.setProperty("/iTotal", oData.results.length);
                     };
                 }.bind(this),
                 error: function (oError) {
                     console.log("oError: ", oError);
                 }.bind(this)
             });
+        },
 
+        onRowSelectionChange: function () {
+            let aSelectedData = this._oAgencyTable.getSelectedIndices();
+            if (aSelectedData.length > 0) {
+                this._oViewModel.setProperty("/bHasSelectedRow", true);
+            } else {
+                this._oViewModel.setProperty("/bHasSelectedRow", false);
+            };
         },
 
         onPress: function () {
@@ -37,80 +77,46 @@ sap.ui.define([
         },
 
         onAddAgency: function (oEvent) {
-            // MessageBox.success("Button Add Placeholder.");
+            let aModelData = this._oViewModel.getProperty("/data");
+            aModelData.push(
+                { "zmstatus": "New" }
+            );
 
-            /* let oDataModel = new ODataModel({
-                serviceUrl: "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI"
-            }); */
+            // Refresh Screen
+            this._oViewModel.setProperty("/data", aModelData);
 
-            /* let oObject = {
-                AGENCYID: "2",
-                NAME: "Agency 2"
-            };
-
-            oDataModel.create("/ZBTP_SRV_KIETPA7_AGENCY_UI", oObject, {
-                success: function (oResult) {
-                    console.log("oResult: ", oResult);
-                    // oDataModel.refresh(true)
-                    this._readData(oDataModel);
-                }.bind(this),
-                error: function (oError) {
-                    console.log("oError: ", oError);
-                }
-            }); */
-
-            let aModelData = this._oViewModel.getData();
-
-            console.log("aModelData: ", aModelData);
-            aModelData.data.push({"zmstatus": "New"});
-
-            this._oViewModel.setProperty("/data", aModelData.data); // Refresh Screen
-
-            /* let sJsonString = this._oViewModel.getJSON();
-            console.log("sJsonString: ", sJsonString); */
+            // Check Pending Page
         },
 
         onDelAgency: function (oEvent) {
             // MessageBox.error("Button Delete Placeholder.");
 
-            let oDataModel = new ODataModel({
-                serviceUrl: "/sap/opu/odata/sap/ZBTP_SRV_KIETPA7_AGENCY_UI"
+            MessageBox.error(this._oResourceBundle.getText("deleteConfirm"), {
+                title: this._oResourceBundle.getText("delButton"),
+                actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+                emphasizedAction: MessageBox.Action.OK,
+                initialFocus: sap.m.MessageBox.Action.CLOSE,
+                onClose: function (sAction) {
+                    if (sAction === "OK") {
+                        const iTotal = this._oViewModel.getProperty("/iTotal");
+
+                        let oTable = this.getView().byId("agencyTable");
+                        let aSelectedIndices = this._oAgencyTable.getSelectedIndices();
+
+                        // Delete data from Last Element
+                        for (let i = 0; i < iTotal; i++) {
+                            let oContext = this._oAgencyTable.getContextByIndex(aSelectedIndices[iTotal - i - 1]);
+                            this._removeItem(oContext);
+                        };
+                        // Check Pending Page
+                    };
+                }.bind(this),
+                dependentOn: this.getView()
             });
+        },
 
-            let oTable = this.getView().byId("agencyTable");
-            let aSelectedIndices = oTable.getSelectedIndices();
-
-            aSelectedIndices.forEach(iSelectedItem => {
-                let oContext = oTable.getContextByIndex(iSelectedItem);
-                let oObject = oContext.getObject();
-                switch (oObject.zmstatus) {
-                    case "New":
-                        
-                        break;
-                
-                    default:
-
-                        break;
-                }
-
-                let sPath = "/YBTP_CR_KIETPA7_AGENCY('" + oObject.AGENCYID + "')";
-
-                console.log("sPath: ", sPath);
-
-                /* oDataModel.remove(sPath, {
-                    success: function (oResult) {
-                        console.log("oResult: ", oResult);
-
-                        MessageBox.success("{i18n>delSuccess}");
-                        oDataModel.refresh(true)
-                        this._readData(oDataModel);
-                    }.bind(this),
-                    error: function (oError) {
-                        console.log("oError: ", oError);
-                        MessageBox.error("{i18n>delFailure}");
-                    }.bind(this)
-                }); */
-            });
+        _removeItem: function (oContext) {
+            //MessageBox.success("Test Delete");
         },
 
         onSubmitAgency: function (oEvent) {
@@ -120,28 +126,29 @@ sap.ui.define([
                 styleClass: "",
                 actions: [
                     sap.m.MessageBox.Action.OK,
-                    sap.m.MessageBox.Action.CANCEL
+                    sap.m.MessageBox.Action.CLOSE
                 ],
                 emphasizedAction: sap.m.MessageBox.Action.OK,
-                initialFocus: null,
+                initialFocus: sap.m.MessageBox.Action.CLOSE,
                 textDirection: sap.ui.core.TextDirection.Inherit,
-                dependentOn: null
+                onClose: function (sAction) {
+                    if (sAction === "OK") {
+                        MessageBox.success("You submitted!");
+                    };
+                }.bind(this),
+                dependentOn: this.getView()
             });
 
             console.log("oAnswer: ", oAnswer);
         },
 
         onToggleEdit: function (oEvent) {
-            // MessageBox.success("Edit Toggle.");
-
-            let oNameInput = this.byId("nameInput");
-
             if (oEvent.getSource().getState() === true) {
-                MessageBox.information("Edit Enabled.");
+                //MessageBox.information("Edit Enabled.");
+                this._oViewModel.setProperty("/bEdit", true);
             } else {
-                MessageBox.information("Edit Disabled.");
+                this._oViewModel.setProperty("/bEdit", false);
             };
-
         },
 
         onChange: function (oEvent) {
@@ -151,15 +158,21 @@ sap.ui.define([
             });
 
             let oTable = this.getView().byId("agencyTable");
-            let aSelectedIndices = oTable.getSelectedIndices();
- */
-            const sNewValue = oEvent.mParameters.newValue;
+            let aSelectedIndices = oTable.getSelectedIndices(); */
 
-            const oRow = oEvent.getSource().getParent();//Get Row
-            const oTable = oRow.getParent();// Get Table
+            const oSource = oEvent.getSource();
+            const oContext = oSource.getBindingContext("mainView");
 
-            if (sNewValue === "3nd Street") {
-                MessageBox.error("Invalid Data");
+            // Update Object Status
+            if (oContext) {
+                let sPath = oContext.getPath();
+                let oObject = oContext.getObject();
+                if (oObject.zmstatus !== "New") {
+                    oObject.zmstatus = "Update";
+                };
+                // Update Data in List
+                this._oViewModel.setProperty(sPath, oObject);
+                // Check Pending Page
             };
 
         }
