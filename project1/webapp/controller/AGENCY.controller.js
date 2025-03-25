@@ -98,48 +98,62 @@ sap.ui.define([
                 initialFocus: sap.m.MessageBox.Action.CLOSE,
                 onClose: function (sAction) {
                     if (sAction === "OK") {
-                        const iTotal = this._oViewModel.getProperty("/iTotal");
-
                         let oTable = this.getView().byId("agencyTable");
-                        let aSelectedIndices = this._oAgencyTable.getSelectedIndices();
+                        const aSelectedIndices = this._oAgencyTable.getSelectedIndices();
 
                         // Delete data from Last Element
-                        for (let i = 0; i < iTotal; i++) {
-                            let oContext = this._oAgencyTable.getContextByIndex(aSelectedIndices[iTotal - i - 1]);
-                            this._removeItem(oContext);
-                        };
-                        // Check Pending Page
+                        aSelectedIndices.forEach((iIndex) => {
+                            let oContext = this._oAgencyTable.getContextByIndex(iIndex);
+                            this._removeItem(oContext, iIndex);
+                        });
                     };
                 }.bind(this),
                 dependentOn: this.getView()
             });
         },
 
-        _removeItem: function (oContext) {
+        _removeItem: function (oContext, iIndex) {
             //MessageBox.success("Test Delete");
+            console.log("oContext : ", oContext);
+
+            let sPath = oContext.getPath();
+            let oObject = oContext.getObject();
+
+            switch (oObject.zmstatus) {
+                case "New":
+                    let aData = this._oViewModel.getProperty("/data",);
+                    aData.splice(iIndex, 1);
+                    // Update Data in List
+                    this._oViewModel.setProperty("/data", aData);
+                    break;
+                default:
+                    oObject.zmstatus = "Delete";
+                    // Update Data in List
+                    this._oViewModel.setProperty(sPath, oObject);
+                    break;
+            };
         },
 
         onSubmitAgency: function (oEvent) {
-            let oAnswer = sap.m.MessageBox.confirm("Would you like to submit?", {
-                title: "Confirm",
-                onClose: null,
-                styleClass: "",
-                actions: [
-                    sap.m.MessageBox.Action.OK,
-                    sap.m.MessageBox.Action.CLOSE
-                ],
-                emphasizedAction: sap.m.MessageBox.Action.OK,
+            MessageBox.error(this._oResourceBundle.getText("submitConfirm"), {
+                title: this._oResourceBundle.getText("submitButton"),
+                actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+                emphasizedAction: MessageBox.Action.OK,
                 initialFocus: sap.m.MessageBox.Action.CLOSE,
-                textDirection: sap.ui.core.TextDirection.Inherit,
                 onClose: function (sAction) {
                     if (sAction === "OK") {
-                        MessageBox.success("You submitted!");
+                        let oTable = this.getView().byId("agencyTable");
+                        const aSelectedIndices = this._oAgencyTable.getSelectedIndices();
+
+                        // Delete data from Last Element
+                        aSelectedIndices.forEach((iIndex) => {
+                            let oContext = this._oAgencyTable.getContextByIndex(iIndex);
+                            
+                        });
                     };
                 }.bind(this),
                 dependentOn: this.getView()
             });
-
-            console.log("oAnswer: ", oAnswer);
         },
 
         onToggleEdit: function (oEvent) {
@@ -174,7 +188,6 @@ sap.ui.define([
                 this._oViewModel.setProperty(sPath, oObject);
                 // Check Pending Page
             };
-
         }
 
     });
