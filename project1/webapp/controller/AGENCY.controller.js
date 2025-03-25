@@ -142,14 +142,7 @@ sap.ui.define([
                 initialFocus: sap.m.MessageBox.Action.CLOSE,
                 onClose: function (sAction) {
                     if (sAction === "OK") {
-                        let oTable = this.getView().byId("agencyTable");
-                        const aSelectedIndices = this._oAgencyTable.getSelectedIndices();
 
-                        // Delete data from Last Element
-                        aSelectedIndices.forEach((iIndex) => {
-                            let oContext = this._oAgencyTable.getContextByIndex(iIndex);
-                            
-                        });
                     };
                 }.bind(this),
                 dependentOn: this.getView()
