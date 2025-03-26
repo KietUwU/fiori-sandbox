@@ -37,7 +37,7 @@
 					<m:Button id="_IDGenButton2"
                         type="Emphasized"
                         text="{i18n>submitButton}"
-						enabled="{= ${mainView>/bEdit} }"
+						enabled="{= ${mainView>/bEdit} &amp;&amp; ${mainView>/bHasPendingChange} }"
                         press=".onSubmitAgency"/>
 
                     <m:ToolbarSeparator id="_IDGenToolbarSeparator2" />

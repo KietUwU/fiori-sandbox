@@ -23,26 +23,9 @@ sap.ui.define([
             });
             this._aOriginalData = [];
             this._oAgencyTable = this.getView().byId("agencyTable");
+
             this.getView().setModel(this._oViewModel, "mainView");
-
             this._readData(oDataModel);
-
-            /* oDataModel.read("/YBTP_CR_KIETPA7_AGENCY", {
-                // filters: []
-                success: function (oData) {
-                    if (oData.results.length > 0) {
-                        this._aOriginalData = oData.results;
-                        // Set Data
-                        this.getView().getModel("mainView").setProperty("/data", oData.results);
-                        // Set Total
-                        this._oViewModel.setProperty("/iTotal", oData.results.length);
-                    };
-                }.bind(this),
-                error: function (oError) {
-                    console.log("oError: ", oError);
-                }.bind(this)
-            }); */
-
         },
 
         _readData: function (oDataModel) {
@@ -86,6 +69,7 @@ sap.ui.define([
             this._oViewModel.setProperty("/data", aModelData);
 
             // Check Pending Page
+            this._oViewModel.setProperty("/bHasPendingChange", true);
         },
 
         onDelAgency: function (oEvent) {
@@ -130,6 +114,7 @@ sap.ui.define([
                     oObject.zmstatus = "Delete";
                     // Update Data in List
                     this._oViewModel.setProperty(sPath, oObject);
+                    this._oViewModel.setProperty("/bHasPendingChange", true);
                     break;
             };
         },
@@ -180,6 +165,7 @@ sap.ui.define([
                 // Update Data in List
                 this._oViewModel.setProperty(sPath, oObject);
                 // Check Pending Page
+                this._oViewModel.setProperty("/bHasPendingChange", true);
             };
         }
 
