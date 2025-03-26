@@ -127,6 +127,49 @@ sap.ui.define([
                 initialFocus: sap.m.MessageBox.Action.CLOSE,
                 onClose: function (sAction) {
                     if (sAction === "OK") {
+                        let aData = this._oViewModel.getProperty("/data",);
+                        let oDataModel = this.getOwnerComponent().getModel();
+                        const oParameters = {
+                            "groupId": "submitID"
+                        };
+
+                        oDataModel.setUseBatch(true);
+
+                        aData.forEach((oRowData) => {
+                            const sPath = "/YBTP_CR_KIETPA7_AGENCY('" + oRowData.AGENCYID + "')";
+
+                            if (!oRowData.AGENCYID) {
+                                return 4;
+                            };
+
+                            switch (oRowData.zmstatus) {
+                                case "Delete":
+                                    oDataModel.remove(sPath, oParameters);
+                                    break;
+                                case "Update":
+                                    oDataModel.update(sPath, oRowData, oParameters);
+                                    break;
+                                case "New":
+                                    oDataModel.create(sPath, oRowData, oParameters);
+                                    break;
+                                default:
+                                    break;
+                            };
+                        });
+
+                        oDataModel.submitChanges(oParameters, {
+                            success: function (oResult) {
+                                console.log("oResult: ", oResult);
+
+                                MessageBox.success("Submit Successful.");
+                                oDataModel.refresh(true)
+                                this._readData(oDataModel);
+                            }.bind(this),
+                            error: function (oError) {
+                                console.log("oError: ", oError);
+                                MessageBox.error("Submit Failed.");
+                            }.bind(this)
+                        });
 
                     };
                 }.bind(this),
