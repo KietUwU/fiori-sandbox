@@ -59,7 +59,7 @@
 						<m:ObjectStatus class="sapUiTinyMarginBegin" 
 							text=""
 							icon="{
-								path: 'mainView>zmstatus',
+								path: 'mainView>/zmstatus',
 								formatter: '.formatter.statusIcon'
 							}"
 						/>
@@ -70,7 +70,7 @@
 					<m:Label id="_IDGenLabel" text="Agency ID" />
 					<template>
 						<m:HBox>
-							<m:Input id="AGENCYID" value="{mainView>AGENCYID}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>zmstatus} === 'New' ? true : false }" ></m:Input>
+							<m:Input id="AGENCYID" value="{mainView>AGENCYID}" visible="{= ${mainView>/bEdit} }" change="onChange" enabled="{= ${mainView>/zmstatus} === 'New' ? true : false }" ></m:Input>
 							<m:Text id="_IDGenText" text="{mainView>AGENCYID}" wrapping="{= ${!mainView>/bEdit} }" visible="{= !${mainView>/bEdit} }" />
 						</m:HBox>
 					</template>

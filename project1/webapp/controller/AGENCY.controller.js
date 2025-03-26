@@ -16,6 +16,7 @@ sap.ui.define([
             this._oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             this._oViewModel = new JSONModel({
                 data: [],
+                zmstatus: "",
                 iTotal: 0,
                 bEdit: false,
                 bHasSelectedRow: false,
@@ -157,6 +158,7 @@ sap.ui.define([
                             };
                         });
 
+                        oDataModel.setDeferredGroups("submitID");
                         oDataModel.submitChanges(oParameters, {
                             success: function (oResult) {
                                 console.log("oResult: ", oResult);
